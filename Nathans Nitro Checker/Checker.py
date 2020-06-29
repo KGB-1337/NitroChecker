@@ -1,18 +1,9 @@
+
+from datetime import datetime
 from colorama import Fore, Style, init
-import requests
 init()
 
-def checkNitro(code, userToken):
-    
-    URL = f'https://discordapp.com/api/v6/entitlements/gift-codes/{code}/redeem'
-    result = requests.post(URL, headers={'authorization': userToken}).text
-    if 'nitro' in result:
-        return True
-    else: 
-        return False
-
-
-userToken = str(input('Enter Your Discord Token. \n >'))
+userToken = str(input('Enter Discord Token!. \n >'))
 
 VALID_CODES_FILE   = "valid_nitro_codes.txt"
 INVALID_CODES_FILE = "invalid_nitro_codes.txt"
@@ -28,10 +19,17 @@ with open(CODES_FILE , 'r') as codes_file:
     for code in codes:
         status = checkNitro(code, userToken)
         if status is True:
-            print(f'{Fore.GREEN + Style.BRIGHT} {code}', Fore.WHITE + Style.NORMAL)
+            print(f'{Fore.GREEN + Style.BRIGHT}[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] {code}', Fore.WHITE + Style.NORMAL)
             validTokens_file.write(code + "\n")
         else:
-            print(f'{Fore.RED + Style.BRIGHT} {code}', Fore.WHITE + Style.NORMAL)
+            print(f'{Fore.RED + Style.BRIGHT}[{datetime.now().strftime("%Y-%m-%d %H:%M:%S")}] {code}', Fore.WHITE + Style.NORMAL)
             invalidTokens_file.write(code + "\n")
 print('Done.')
 input()
+def checkNitro(code, userToken):
+    URL = f'https://discordapp.com/api/v6/entitlements/gift-codes/{code}/redeem'
+    result = requests.post(URL, headers={'authorization': userToken}).text
+    if 'nitro' in result:
+        return True
+    else: 
+        return False
